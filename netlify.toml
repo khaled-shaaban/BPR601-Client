@@ -1,0 +1,19 @@
+# Netlify config for the Nuxt SPA client.
+# The Laravel API is NOT deployed here — host it separately and point
+# NUXT_PUBLIC_API_BASE at it (set in Netlify → Site settings → Environment).
+# Notifications are delivered by polling, so there is no WebSocket server to configure.
+#
+# Required build-time env vars on Netlify (baked into the static build):
+#   NUXT_PUBLIC_API_BASE           = https://api.your-domain.com/api
+# Optional:
+#   NUXT_PUBLIC_NOTIFICATIONS_POLL_MS = 25000   # how often to check for new notifications
+
+[build]
+  command = "npm run generate"
+  publish = ".output/public"
+
+# SPA fallback: every route serves index.html so client-side routing works on reload.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

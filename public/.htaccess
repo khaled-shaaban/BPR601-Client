@@ -1,0 +1,25 @@
+# SPA history-mode fallback for Apache / LiteSpeed (e.g. Hostinger shared hosting).
+# Copied verbatim into the build output root by `nuxt generate`.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Serve real files and directories as-is.
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Everything else is client-side routing → hand it to the SPA entry point.
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Long-cache the fingerprinted build assets (safe: filenames change on rebuild).
+<IfModule mod_headers.c>
+  <FilesMatch "\.(js|css|woff2?|ttf|eot|svg)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  # Never cache the HTML shell so new deploys are picked up immediately.
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
